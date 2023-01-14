@@ -1,5 +1,5 @@
 const w = 900;
-const h = 500;
+const h = 600;
 const barWidth = 0;
 const padding = 40;
 
@@ -66,6 +66,30 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
         .attr("transform", "translate(" + padding + ",0)")
         .call(yAxis)
 
+    // TOOLTIPS
+    tooltip = d3.select("#holder")
+        .append("div")
+        .attr("class", "tooltip")
+        .attr("id", "tooltip")
+        .style("opacity", 0)
+
+    // A function that change this tooltip when the user hover a point.
+    // Its opacity is set to 1: we can now see it.
+    let mouseover = function (d) {
+        tooltip
+            .style("opacity", 1)
+        tooltip
+            .html(`${d.Name}: ${d.Nationality}<br/>Year: ${d.Year}, Time: ${d.Time}${d.Doping ? "<br/><br/>" + d.Doping : ''}`)
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY - 28) + "px")
+            .attr("data-year", d.Year)
+    }
+
+
+    let mouseleave = function (d) {
+        tooltip.style("opacity", 0)
+    }
+
     // DOTS
     svg.selectAll("circle")
         .data(data)
@@ -73,10 +97,11 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
         .append("circle")
         .attr("class", "dot")
         .attr("cx", (d) => xScale(d.Year))
-        .attr("cy",(d) => yScale(d.Seconds))
+        .attr("cy", (d) => yScale(d.Seconds))
         .attr("r", 6)
         .attr("data-xvalue", (d) => d.Year)
         .attr("data-yvalue", (d) => new Date(1970, 0, 1, 0, 0, d.Seconds).toISOString())
+        .on("mouseover", mouseover)
+        .on("mouseleave", mouseleave)
 
-    // TOOLTIPS
 });
