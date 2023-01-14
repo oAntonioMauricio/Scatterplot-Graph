@@ -26,7 +26,6 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
     }
 
     //DATA TO YEARS AND TIME
-
     let years = data.map(x => x.Year);
     let time = data.map(x => hmsToSecondsOnly(x.Time))
 
@@ -38,7 +37,7 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
     let maxYear = d3.max(years)
 
     let xScale = d3.scaleLinear()
-        .domain([minYear, maxYear])
+        .domain([minYear - 1, maxYear + 1])
         .range([0 + padding, w - padding])
 
     let xAxis = d3.axisBottom(xScale).tickFormat(d3.format(""))
@@ -67,4 +66,17 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
         .attr("transform", "translate(" + padding + ",0)")
         .call(yAxis)
 
+    // DOTS
+    svg.selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("class", "dot")
+        .attr("cx", (d) => xScale(d.Year))
+        .attr("cy",(d) => yScale(d.Seconds))
+        .attr("r", 6)
+        .attr("data-xvalue", (d) => d.Year)
+        .attr("data-yvalue", (d) => new Date(1970, 0, 1, 0, 0, d.Seconds).toISOString())
+
+    // TOOLTIPS
 });
