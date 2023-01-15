@@ -85,7 +85,6 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
             .attr("data-year", d.Year)
     }
 
-
     let mouseleave = function (d) {
         tooltip.style("opacity", 0)
     }
@@ -99,9 +98,43 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
         .attr("cx", (d) => xScale(d.Year))
         .attr("cy", (d) => yScale(d.Seconds))
         .attr("r", 6)
+        .attr("fill", (d) => `${d.Doping ? "blue" : "orange"}`)
         .attr("data-xvalue", (d) => d.Year)
         .attr("data-yvalue", (d) => new Date(1970, 0, 1, 0, 0, d.Seconds).toISOString())
         .on("mouseover", mouseover)
         .on("mouseleave", mouseleave)
+
+    // LEGEND
+    // DOPING ALLEGATIONS
+    svg.append("rect")
+        .attr("x", xScale(2015) + 20)
+        .attr("y", yScale(2285))
+        .attr("width", 15)
+        .attr("height", 15)
+        .style("fill", "blue")
+
+    svg.append("text")
+        .attr("x", xScale(2011) - 5)
+        .attr("y", yScale(2285) + 8)
+        .text("Riders with doping allegations")
+        .style("font-size", "12px")
+        .attr("alignment-baseline", "middle")
+        .attr("id", "legend")
+
+    // NO DOPPING
+    svg.append("rect")
+        .attr("x", xScale(2015) + 20)
+        .attr("y", yScale(2295))
+        .attr("width", 15)
+        .attr("height", 15)
+        .style("fill", "orange")
+
+    svg.append("text")
+        .attr("x", xScale(2012) + 3)
+        .attr("y", yScale(2295) + 8)
+        .text("No doping allegations")
+        .style("font-size", "12px")
+        .attr("alignment-baseline", "middle")
+        .attr("id", "legend")
 
 });
